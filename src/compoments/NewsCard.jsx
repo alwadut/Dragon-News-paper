@@ -1,5 +1,6 @@
 import { CiBookmark, CiShare2 } from "react-icons/ci";
 import { FaRegEye, FaStar } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const NewsCard = (props ={}) => {
     const {news} = props || {}; // for validate news if any empty object find ,there is no error 
@@ -40,10 +41,10 @@ const NewsCard = (props ={}) => {
           {news.details.length > 250
             ? `${news.details.slice(0, 250)}...`
             : news.details}
-          <span className="text-orange-500 font-medium cursor-pointer">
+          <Link to={`/news/${news._id}`} className="text-orange-500 font-medium cursor-pointer">
             {" "}
             Read More
-          </span>
+          </Link>
         </p>
       </div>
 

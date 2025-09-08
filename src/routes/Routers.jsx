@@ -5,6 +5,11 @@ import {
 } from "react-router-dom";
 import Home from "../Layout/Home";
 import CategoryNews from "../pages/CategoryNews";
+import AuthLayOut from "../Layout/AuthLayOut";
+import Login from "../pages/Login";
+import Ragister from "../pages/Ragister";
+import NewsDetails from "../pages/NewsDetails";
+import PrivateRoute from "./PrivateRoute";
 
 
 const Routers = createBrowserRouter([
@@ -26,12 +31,27 @@ const Routers = createBrowserRouter([
     ]
   },
   {
-    path: "/news",
-    element: <div>News </div>,
+    path: "/news/:id",
+    element: <PrivateRoute>
+      <NewsDetails/>
+    </PrivateRoute>,
+    loader:({params})=>
+      fetch(`https://openapi.programming-hero.com/api/news/${params.id}`),
+    
   },
   {
     path: "/auth",
-    element: <div>Auth</div>,
+    element: <AuthLayOut/>,
+    children:[
+      {
+        path:"/auth/login",
+        element: <Login/>
+      },
+      {
+        path:"/auth/signup",
+        element: <Ragister/>
+      },
+    ]
   },
   {
     path: "*",

@@ -10,7 +10,7 @@ import { Outlet } from 'react-router-dom';
 
 const Home = () => {
     return (
-        <div className='font-poppins'>
+        <div className='font-poppins w-10/12 mx-auto'>
             <header>
                 <Header></Header>
                 <section className='w-11/12 mx-auto'>
