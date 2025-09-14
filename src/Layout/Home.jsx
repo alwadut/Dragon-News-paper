@@ -4,15 +4,18 @@ import LatestNews from '../compoments/LatestNews';
 import Navbar from '../compoments/Navbar';
 import LeftNavbar from '../compoments/Layout Component/leftNavbar';
 import RightNav from '../compoments/Layout Component/RightNav';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import Loading from '../pages/Loading';
 
 
 
 const Home = () => {
+    const {state} = useNavigate();
     return (
         <div className='font-poppins w-10/12 mx-auto'>
             <header>
                 <Header></Header>
+                {import.meta.env.VITE_name}
                 <section className='w-11/12 mx-auto'>
                     <LatestNews></LatestNews>
                 </section>
@@ -27,7 +30,7 @@ const Home = () => {
                         </LeftNavbar>
                     </aside>
                     <section className='main col-span-6'>
-                       <Outlet/>
+                       {state == "loading" ?<Loading></Loading>:<Outlet/>}
                     </section>
                     <aside className='right col-span-3'>
                         <RightNav/>

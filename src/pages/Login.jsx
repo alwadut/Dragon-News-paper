@@ -1,26 +1,36 @@
-import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../provider/AuthProvider";
 
 const Login = () => {
   const {userLogin,setUser} = useContext(AuthContext)
+  const [error,setError] = useState({});
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // console.log(location);
+
   const handleSubmitLogin =(e)=>{
     e.preventDefault();
     const form  = e.target;
     const email = form.email.value;
     const password = form.password.value;
 
-    console.log({email,password});
+    // console.log({email,password});
     
     userLogin(email,password)
     .then((result)=>{
             const user = result.user;
-            console.log(user);
-            setUser(user)
+            // console.log(user);
+            setUser(user);
+            navigate(location ?.state ? location.state : "/")
+
         })
-        .catch((error)=>{
-            const errorMessage = error.message;
-            console.log(errorMessage);
+        .catch((err)=>{
+            // const errorMessage = error.message;
+            // console.log(errorMessage);
+
+            setError({...error,login : err.code })
         })
   }
 
@@ -29,7 +39,7 @@ const Login = () => {
       
       <div className="min-h-screen mt-5 ">
           
-        <div className="hero-content flex-col lg:flex-row-reverse">
+        <div className="hero-content mx-auto flex-col lg:flex-row-reverse">
           <div className="card w-full max-w-sm shrink-0 bg-gray-300 p-10">
             <h2 className="text-2xl font-semibold text-center">Login Your Account</h2>
 
@@ -43,6 +53,13 @@ const Login = () => {
                   className="input bg-white"
                   placeholder="Password"
                 />
+                {
+                  error.login && (
+                    <label className="level text-sm text-red-500">
+                      { error.login}
+                    </label>
+                  )
+                }
                 <div>
                   <a className="link link-hover">Forgot password?</a>
                 </div>

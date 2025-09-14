@@ -1,8 +1,4 @@
-
-import {
-  createBrowserRouter,
-  Navigate,
-} from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import Home from "../Layout/Home";
 import CategoryNews from "../pages/CategoryNews";
 import AuthLayOut from "../Layout/AuthLayOut";
@@ -10,48 +6,52 @@ import Login from "../pages/Login";
 import Ragister from "../pages/Ragister";
 import NewsDetails from "../pages/NewsDetails";
 import PrivateRoute from "./PrivateRoute";
-
+import Loading from "../pages/Loading";
 
 const Routers = createBrowserRouter([
   {
     path: "/",
     element: <Home></Home>,
-    children:[
+    children: [
       {
-        path:"",
-        element: <Navigate to={'/category/01'}></Navigate>
+        path: "",
+        element: <Navigate to={"/category/01"}></Navigate>,
       },
       {
-        path:"/category/:id",
-        element: <CategoryNews/>,
-        loader:({params})=>
-          fetch(`https://openapi.programming-hero.com/api/news/category/${params.id}`)
-       
-      }
-    ]
+        path: "/category/:id",
+        element: <CategoryNews />,
+        loader: ({ params }) =>
+          fetch(
+            `https://openapi.programming-hero.com/api/news/category/${params.id}`
+          ),
+          hydrateFallbackElement:<Loading></Loading>
+      },
+    ],
   },
   {
     path: "/news/:id",
-    element: <PrivateRoute>
-      <NewsDetails/>
-    </PrivateRoute>,
-    loader:({params})=>
+    element: (
+      <PrivateRoute>
+        <NewsDetails />
+      </PrivateRoute>
+    ),
+    loader: ({ params }) =>
       fetch(`https://openapi.programming-hero.com/api/news/${params.id}`),
-    
+     hydrateFallbackElement:<Loading></Loading>
   },
   {
     path: "/auth",
-    element: <AuthLayOut/>,
-    children:[
+    element: <AuthLayOut />,
+    children: [
       {
-        path:"/auth/login",
-        element: <Login/>
+        path: "/auth/login",
+        element: <Login />,
       },
       {
-        path:"/auth/signup",
-        element: <Ragister/>
+        path: "/auth/signup",
+        element: <Ragister />,
       },
-    ]
+    ],
   },
   {
     path: "*",

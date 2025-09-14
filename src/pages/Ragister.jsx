@@ -1,40 +1,49 @@
 import { GrCheckbox } from "react-icons/gr";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../provider/AuthProvider";
-import { use, useContext } from "react";
+import { useContext, useState } from "react";
 
 const Ragister = () => {
+  const { createNewUser, setUser, updateUserProfile } = useContext(AuthContext);
+  const [error, setError] = useState({});
 
-    const { createNewUser ,setUser} = useContext(AuthContext);
+  const navigate = useNavigate();
 
-    const handleSubmit = (e) =>{
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    //get the data
 
-         e.preventDefault();
-         //get the data 
-
-         const form = new FormData(e.target);
-         const name = form.get('name');
-         const email = form.get('email');
-         const photo = form.get('photo');
-         const password = form.get('password');
-         console.log({name,email,photo,password});
-
-         createNewUser(email,password)
-
-            .then((result) =>{
-                const user = result.user;
-                setUser(user)
-                console.log(user);
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                const errorMessege = error.massege;
-                console.log(errorCode,errorMessege);
-            })
-         
+    const form = new FormData(e.target);
+    const name = form.get("name");
+    if (name.length < 5) {
+      setError({ ...error, name: "must be more then 5 charecter" });
+      return;
     }
+    const email = form.get("email");
+    const photo = form.get("photo");
+    const password = form.get("password");
+    // console.log({ name, email, photo, password });
 
-
+    createNewUser(email, password)
+      .then((result) => {
+        const user = result.user;
+        // console.log(user);
+        updateUserProfile({ displayName: name, photoURL: photo })
+          .then(() => {
+            setUser({...user,displayName: name, photoURL: photo});
+            navigate('/')
+          })
+          .catch((error) => {
+            console.log(error);
+            setUser();
+          });
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessege = error.massege;
+        console.log(errorCode, errorMessege);
+      });
+  };
 
   return (
     <div className="min-h-screen mt-5 ">
@@ -53,7 +62,10 @@ const Ragister = () => {
                 name="name"
                 placeholder="Name"
               />
-
+              {error.name && (
+                <level className=" text-xs text-red-500">{error.name}</level>
+              )}
+              <br></br>
               <label className="label">Photo URL </label>
               <input
                 type="text"
@@ -71,7 +83,7 @@ const Ragister = () => {
               />
 
               <label className="label">Password</label>
-              <input 
+              <input
                 name="password"
                 type="password"
                 className="input bg-white"
