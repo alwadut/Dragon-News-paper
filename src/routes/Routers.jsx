@@ -7,6 +7,7 @@ import Ragister from "../pages/Ragister";
 import NewsDetails from "../pages/NewsDetails";
 import PrivateRoute from "./PrivateRoute";
 import Loading from "../pages/Loading";
+import LatestNews from "../compoments/LatestNews";
 
 const Routers = createBrowserRouter([
   {
@@ -18,13 +19,23 @@ const Routers = createBrowserRouter([
         element: <Navigate to={"/category/01"}></Navigate>,
       },
       {
+        path: "/latest:category_id",
+        element: <LatestNews />,
+        loader:  ({params}) => {
+          return fetch(
+            `https://openapi.programming-hero.com/api/news/category/${params.category_id}`
+          );
+          
+        },
+      }, 
+      {
         path: "/category/:id",
         element: <CategoryNews />,
         loader: ({ params }) =>
           fetch(
             `https://openapi.programming-hero.com/api/news/category/${params.id}`
           ),
-          hydrateFallbackElement:<Loading></Loading>
+        hydrateFallbackElement: <Loading></Loading>,
       },
     ],
   },
@@ -37,7 +48,7 @@ const Routers = createBrowserRouter([
     ),
     loader: ({ params }) =>
       fetch(`https://openapi.programming-hero.com/api/news/${params.id}`),
-     hydrateFallbackElement:<Loading></Loading>
+    hydrateFallbackElement: <Loading></Loading>,
   },
   {
     path: "/auth",

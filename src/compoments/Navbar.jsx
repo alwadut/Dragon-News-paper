@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import user from '../assets/user.png'
 import { AuthContext } from '../provider/AuthProvider';
 const Navbar = () => {
     const {user,logOut} = useContext(AuthContext)
